@@ -1,58 +1,61 @@
 'use strict';
 
+var ctx = document.getElementById('chart').getContext('2d');
+
 var container = document.getElementById('image-container');
 var thisSet = {};
 var previousSet = {};
 var allImages = [];
 
-function randomizeCatalogEntry() {
-  for (var i = 0; i < allCatalogEntrysArray.length; i++) {
-    var randomCatalogEntry = Math.floor(Math.random() * allCatalogEntrysArray.length);
-    CatalogEntryElement.src = allCatalogEntrysArray[randomCatalogEntry].src;
-    CatalogEntryCaption.textContent = allCatalogEntrysArray[randomCatalogEntry].name;
-  }
-}
+
+// function randomizeCatalogEntry() {
+//   for (var i = 0; i < CatalogEntry.length; i++) {
+//     var randomCatalogEntry = Math.floor(Math.random() * CatalogEntry.length);
+//     loadCatalogEntrys.src = CatalogEntry[randomCatalogEntry].src;
+//     CatalogEntry.textContent = CatalogEntry[randomCatalogEntry].name;
+//   }
+// }
 
 
 function CatalogEntry(name, url) {
   this.id = Math.random();
   this.name = name;
   this.src = url;
-  this.numClicks = 0;
+  this.numClicks = 20;
   this.numViews = 0;
   allImages.push(this);
 }
 
 CatalogEntry.prototype.updateViews = function () {
   this.numViews++;
-}
+};
 
 CatalogEntry.prototype.updateClicks = function () {
   this.numClicks++;
-}
+};
 
 
 
 function loadCatalogEntrys() {
-  new CatalogEntry('R2D2 Bag', '/images/bag.jpg');
-  new CatalogEntry('banana', '/images/banana.jpg');
-  new CatalogEntry('poop stand', '/images/bathroom.jpg');
-  new CatalogEntry('Toeless Boots', '/images/boots.jpg');
-  new CatalogEntry('breakfast machine', '/images/breakfast.jpg');
-  new CatalogEntry('meatball bubblegum', '/images/bubblegum.jpg');
-  new CatalogEntry('bump chair', '/images/chair.jpg');
-  new CatalogEntry('demon dragon', '/images/cthulhu.jpg');
-  new CatalogEntry('dragon meat', '/images/dragon.jpg');
-  new CatalogEntry('Pen utensils', '/images/pen.jpg');
-  new CatalogEntry('Pet Sweeper', '/images/pet-sweep.jpg');
-  new CatalogEntry('Pizza Scissors', '/images/scissors.jpg');
-  new CatalogEntry('Shark Bed', '/images/shark.jpg');
-  new CatalogEntry('Child Sweeper', '/images/sweep.png');
-  new CatalogEntry('TaunTaun', '/images/tauntaun.jpg');
-  new CatalogEntry('Tenticle USB', '/images/usb.gif');
-  new CatalogEntry('Unicorn', '/images/unicorn.jpg');
-  new CatalogEntry('Water Can', '/images/water-can.jpg');
-  new CatalogEntry('Non-functional Wine Glass', '/images/wine-glass.jpg');
+  new CatalogEntry('R2D2 Bag', 'images/bag.jpg');
+  new CatalogEntry('banana', 'images/banana.jpg');
+  new CatalogEntry('poop stand', 'images/bathroom.jpg');
+  new CatalogEntry('Toeless Boots', 'images/boots.jpg');
+  new CatalogEntry('breakfast machine', 'images/breakfast.jpg');
+  new CatalogEntry('meatball bubblegum', 'images/bubblegum.jpg');
+  new CatalogEntry('bump chair', 'images/chair.jpg');
+  new CatalogEntry('demon dragon', 'images/cthulhu.jpg');
+  new CatalogEntry('dragon meat', 'images/dragon.jpg');
+  new CatalogEntry('Pen utensils', 'images/pen.jpg');
+  new CatalogEntry('Pet Sweeper', 'images/pet-sweep.jpg');
+  new CatalogEntry('Pizza Scissors', 'images/scissors.jpg');
+  new CatalogEntry('Shark Bed', 'images/shark.jpg');
+  new CatalogEntry('Child Sweeper', 'images/sweep.png');
+  new CatalogEntry('TaunTaun', 'images/tauntaun.jpg');
+  new CatalogEntry('Tenticle USB', 'images/usb.gif');
+  new CatalogEntry('Unicorn', 'images/unicorn.jpg');
+  new CatalogEntry('Water Can', 'images/water-can.jpg');
+  new CatalogEntry('Non-functional Wine Glass', 'images/wine-glass.jpg');
 }
 
 function setupImageContainers(numImages) {
@@ -101,6 +104,7 @@ function showRandomImages(numImages) {
     img.src = imageObject.src;
     img.alt = imageObject.name;
 
+
   }
 
   previousSet = thisSet;
@@ -123,10 +127,47 @@ function getRandomUniqueImage() {
       found = allImages[n];
       allImages[n].updateViews();
       thisSet[n] = true;
+      CatalogEntry.prototype.updateClicks;
     }
   }
 
   return found; // something from that array
+}
+var labels = [];
+var data = [];
+var colors = ['black', 'blue', 'green', 'purple'];
+
+for (var i = 0; i < allImages.length; i++){
+  labels.push(allImages[i].name);
+  data.push(allImages[i].numClicks);
+}
+
+
+makeChart(data, labels);
+
+
+
+function makeChart(data, labels) {
+
+  var chart = new Chart(ctx, {
+    // The type of chart we want to create
+    type: 'bar',
+
+    // The data for our dataset
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Busmall Item Data',
+        backgroundColor: colors,
+        borderColor: 'rgb(255, 99, 132)',
+        data: data,
+      }]
+    },
+
+    // Configuration options go here
+    options: {}
+  });
+
 }
 
 
@@ -134,28 +175,3 @@ loadCatalogEntrys();
 setupImageContainers(3);
 setupListener();
 showRandomImages(3);
-
-// randomizeCatalogEntry();
-
-// var totalClicks = 0;
-// var lastShown = [];
-// var allCatalogEntrys = [];
-// var CatalogEntryNames = ['R2D2 Bag', 'banana', 'poop stand', 'Toeless Boots', 'breakfast machine', 'meatball bubblegum', 'bump chair', 'demon dragon', 'dragon meat', 'Pen utensils', 'Pet Sweeper', 'Pizza Scissors', 'Shark Bed', 'Child Sweeper', 'TaunTaun', 'Tenticle USB', 'Unicorn','Water Can', 'Non-functional Wine Glass',];
-
-// var firstImg = document.getElementById('first');
-// var secondImg = document.getElementById('second');
-// var thirdImg = document.getElementById('third');
-
-// function Products(name, path){
-//   this.name = name;
-//   this.path = 'img/' + name + '.jpg';
-//   this.views = 0;
-//   this.tally = 0;
-
-//   allCatalogEntrys.push(this);
-// }
-
-// function randomCatalogEntry{
-//   var firstRandom = Math.floor(Math.random() * allCatalogEntrys.length);
-// }
-
