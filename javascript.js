@@ -6,7 +6,8 @@ var container = document.getElementById('image-container');
 var thisSet = {};
 var previousSet = {};
 var allImages = [];
-
+var totalClicks = 0;
+var dataAddedUp = [];
 
 // function randomizeCatalogEntry() {
 //   for (var i = 0; i < CatalogEntry.length; i++) {
@@ -21,7 +22,7 @@ function CatalogEntry(name, url) {
   this.id = Math.random();
   this.name = name;
   this.src = url;
-  this.numClicks = 20;
+  this.numClicks = 0;
   this.numViews = 0;
   allImages.push(this);
 }
@@ -29,7 +30,6 @@ function CatalogEntry(name, url) {
 CatalogEntry.prototype.updateViews = function () {
   this.numViews++;
 };
-
 CatalogEntry.prototype.updateClicks = function () {
   this.numClicks++;
 };
@@ -73,6 +73,7 @@ function setupImageContainers(numImages) {
 function setupListener() {
   container.addEventListener('click', clickHandler);
 
+
 }
 
 function clickHandler(e) {
@@ -83,6 +84,11 @@ function clickHandler(e) {
     if (allImages[i].name === imageName) {
       allImages[i].updateClicks();
     }
+  }
+  totalClicks++;
+  if(totalClicks === 5){
+    container.removeEventListener('click', clickHandler);
+    makeChart();
   }
   showRandomImages(3);
 }
@@ -104,12 +110,8 @@ function showRandomImages(numImages) {
     img.src = imageObject.src;
     img.alt = imageObject.name;
 
-
   }
-
   previousSet = thisSet;
-
-  console.log(allImages);
 }
 
 function getRandomUniqueImage() {
@@ -127,33 +129,41 @@ function getRandomUniqueImage() {
       found = allImages[n];
       allImages[n].updateViews();
       thisSet[n] = true;
-      CatalogEntry.prototype.updateClicks;
+      CatalogEntry.prototype.updateClicks();
     }
   }
 
   return found; // something from that array
 }
-var labels = [];
-var data = [];
-var colors = ['black', 'blue', 'green', 'purple'];
 
-for (var i = 0; i < allImages.length; i++){
-  labels.push(allImages[i].name);
-  data.push(allImages[i].numClicks);
+function addUpData() {
+  var sum = 0;
+  for(var i = 0; i < allImages.length; i++){
+    sum += allImages[i].updateClicks();
+  }
+  return sum;
 }
+dataAddedUp.push(addUpData);
 
 
-makeChart(data, labels);
 
 
+loadCatalogEntrys();
 
-function makeChart(data, labels) {
 
-  var chart = new Chart(ctx, {
-    // The type of chart we want to create
+function makeChart() {
+  var colors = ['black', 'blue', 'green', 'purple'];
+  var labels = [];
+  var data = [];
+
+  for (var i = 0; i < allImages.length; i++){
+    labels.push(allImages[i].name);
+    data.push(allImages[i].numClicks);
+  }
+  console.log(data);
+
+  var chart = {
     type: 'bar',
-
-    // The data for our dataset
     data: {
       labels: labels,
       datasets: [{
@@ -166,12 +176,11 @@ function makeChart(data, labels) {
 
     // Configuration options go here
     options: {}
-  });
+  };
 
+  return new Chart(ctx, chart);
 }
-
-
-loadCatalogEntrys();
+// addUpData();
 setupImageContainers(3);
 setupListener();
 showRandomImages(3);
