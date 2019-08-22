@@ -26,6 +26,31 @@ function CatalogEntry(name, url) {
   this.numViews = 0;
   allImages.push(this);
 }
+if(localStorage.imageVotes) {
+  allImages = JSON.parse(localStorage.getItem('imageVotes'));
+} else {
+  // function loadCatalogEntrys() {
+    new CatalogEntry('R2D2 Bag', 'images/bag.jpg');
+    new CatalogEntry('banana', 'images/banana.jpg');
+    new CatalogEntry('poop stand', 'images/bathroom.jpg');
+    new CatalogEntry('Toeless Boots', 'images/boots.jpg');
+    new CatalogEntry('breakfast machine', 'images/breakfast.jpg');
+    new CatalogEntry('meatball bubblegum', 'images/bubblegum.jpg');
+    new CatalogEntry('bump chair', 'images/chair.jpg');
+    new CatalogEntry('demon dragon', 'images/cthulhu.jpg');
+    new CatalogEntry('dragon meat', 'images/dragon.jpg');
+    new CatalogEntry('Pen utensils', 'images/pen.jpg');
+    new CatalogEntry('Pet Sweeper', 'images/pet-sweep.jpg');
+    new CatalogEntry('Pizza Scissors', 'images/scissors.jpg');
+    new CatalogEntry('Shark Bed', 'images/shark.jpg');
+    new CatalogEntry('Child Sweeper', 'images/sweep.png');
+    new CatalogEntry('TaunTaun', 'images/tauntaun.jpg');
+    new CatalogEntry('Tenticle USB', 'images/usb.gif');
+    new CatalogEntry('Unicorn', 'images/unicorn.jpg');
+    new CatalogEntry('Water Can', 'images/water-can.jpg');
+    new CatalogEntry('Non-functional Wine Glass', 'images/wine-glass.jpg');
+    }
+  }
 
 CatalogEntry.prototype.updateViews = function () {
   this.numViews++;
@@ -36,27 +61,8 @@ CatalogEntry.prototype.updateClicks = function () {
 
 
 
-function loadCatalogEntrys() {
-  new CatalogEntry('R2D2 Bag', 'images/bag.jpg');
-  new CatalogEntry('banana', 'images/banana.jpg');
-  new CatalogEntry('poop stand', 'images/bathroom.jpg');
-  new CatalogEntry('Toeless Boots', 'images/boots.jpg');
-  new CatalogEntry('breakfast machine', 'images/breakfast.jpg');
-  new CatalogEntry('meatball bubblegum', 'images/bubblegum.jpg');
-  new CatalogEntry('bump chair', 'images/chair.jpg');
-  new CatalogEntry('demon dragon', 'images/cthulhu.jpg');
-  new CatalogEntry('dragon meat', 'images/dragon.jpg');
-  new CatalogEntry('Pen utensils', 'images/pen.jpg');
-  new CatalogEntry('Pet Sweeper', 'images/pet-sweep.jpg');
-  new CatalogEntry('Pizza Scissors', 'images/scissors.jpg');
-  new CatalogEntry('Shark Bed', 'images/shark.jpg');
-  new CatalogEntry('Child Sweeper', 'images/sweep.png');
-  new CatalogEntry('TaunTaun', 'images/tauntaun.jpg');
-  new CatalogEntry('Tenticle USB', 'images/usb.gif');
-  new CatalogEntry('Unicorn', 'images/unicorn.jpg');
-  new CatalogEntry('Water Can', 'images/water-can.jpg');
-  new CatalogEntry('Non-functional Wine Glass', 'images/wine-glass.jpg');
-}
+CatalogEntry.all = [];
+
 
 function setupImageContainers(numImages) {
 
@@ -86,7 +92,7 @@ function clickHandler(e) {
     }
   }
   totalClicks++;
-  if(totalClicks === 5){
+  if(totalClicks === 25){
     container.removeEventListener('click', clickHandler);
     makeChart();
   }
@@ -115,11 +121,6 @@ function showRandomImages(numImages) {
 }
 
 function getRandomUniqueImage() {
-  // pull a random image from the list of all
-  // If it is not in the current set AND wasn't in the last set
-  // add it to the thisSet{}
-  // return it or render it
-  // otherwise, keep trying... (probably a while loop)
 
   var found = false;
 
@@ -150,7 +151,6 @@ dataAddedUp.push(addUpData);
 
 loadCatalogEntrys();
 
-
 function makeChart() {
   var colors = ['black', 'blue', 'green', 'purple'];
   var labels = [];
@@ -180,7 +180,7 @@ function makeChart() {
 
   return new Chart(ctx, chart);
 }
-// addUpData();
+
 setupImageContainers(3);
 setupListener();
 showRandomImages(3);
