@@ -7,7 +7,6 @@ var thisSet = {};
 var previousSet = {};
 var allImages = [];
 var totalClicks = 0;
-var dataAddedUp = [];
 
 // function randomizeCatalogEntry() {
 //   for (var i = 0; i < CatalogEntry.length; i++) {
@@ -26,31 +25,28 @@ function CatalogEntry(name, url) {
   this.numViews = 0;
   allImages.push(this);
 }
-if(localStorage.imageVotes) {
-  allImages = JSON.parse(localStorage.getItem('imageVotes'));
-} else {
-  // function loadCatalogEntrys() {
-    new CatalogEntry('R2D2 Bag', 'images/bag.jpg');
-    new CatalogEntry('banana', 'images/banana.jpg');
-    new CatalogEntry('poop stand', 'images/bathroom.jpg');
-    new CatalogEntry('Toeless Boots', 'images/boots.jpg');
-    new CatalogEntry('breakfast machine', 'images/breakfast.jpg');
-    new CatalogEntry('meatball bubblegum', 'images/bubblegum.jpg');
-    new CatalogEntry('bump chair', 'images/chair.jpg');
-    new CatalogEntry('demon dragon', 'images/cthulhu.jpg');
-    new CatalogEntry('dragon meat', 'images/dragon.jpg');
-    new CatalogEntry('Pen utensils', 'images/pen.jpg');
-    new CatalogEntry('Pet Sweeper', 'images/pet-sweep.jpg');
-    new CatalogEntry('Pizza Scissors', 'images/scissors.jpg');
-    new CatalogEntry('Shark Bed', 'images/shark.jpg');
-    new CatalogEntry('Child Sweeper', 'images/sweep.png');
-    new CatalogEntry('TaunTaun', 'images/tauntaun.jpg');
-    new CatalogEntry('Tenticle USB', 'images/usb.gif');
-    new CatalogEntry('Unicorn', 'images/unicorn.jpg');
-    new CatalogEntry('Water Can', 'images/water-can.jpg');
-    new CatalogEntry('Non-functional Wine Glass', 'images/wine-glass.jpg');
-    }
-  }
+
+function loadCatalogEntrys() {
+  new CatalogEntry('R2D2 Bag', 'images/bag.jpg');
+  new CatalogEntry('banana', 'images/banana.jpg');
+  new CatalogEntry('poop stand', 'images/bathroom.jpg');
+  new CatalogEntry('Toeless Boots', 'images/boots.jpg');
+  new CatalogEntry('breakfast machine', 'images/breakfast.jpg');
+  new CatalogEntry('meatball bubblegum', 'images/bubblegum.jpg');
+  new CatalogEntry('bump chair', 'images/chair.jpg');
+  new CatalogEntry('demon dragon', 'images/cthulhu.jpg');
+  new CatalogEntry('dragon meat', 'images/dragon.jpg');
+  new CatalogEntry('Pen utensils', 'images/pen.jpg');
+  new CatalogEntry('Pet Sweeper', 'images/pet-sweep.jpg');
+  new CatalogEntry('Pizza Scissors', 'images/scissors.jpg');
+  new CatalogEntry('Shark Bed', 'images/shark.jpg');
+  new CatalogEntry('Child Sweeper', 'images/sweep.png');
+  new CatalogEntry('TaunTaun', 'images/tauntaun.jpg');
+  new CatalogEntry('Tenticle USB', 'images/usb.gif');
+  new CatalogEntry('Unicorn', 'images/unicorn.jpg');
+  new CatalogEntry('Water Can', 'images/water-can.jpg');
+  new CatalogEntry('Non-functional Wine Glass', 'images/wine-glass.jpg');
+}
 
 CatalogEntry.prototype.updateViews = function () {
   this.numViews++;
@@ -73,13 +69,10 @@ function setupImageContainers(numImages) {
     img.src = 'http://placehold.it/200x200';
     container.appendChild(img);
   }
-
 }
 
 function setupListener() {
   container.addEventListener('click', clickHandler);
-
-
 }
 
 function clickHandler(e) {
@@ -92,9 +85,11 @@ function clickHandler(e) {
     }
   }
   totalClicks++;
-  if(totalClicks === 25){
+  if(totalClicks === 5){
     container.removeEventListener('click', clickHandler);
+    localStorage.setItem('data', JSON.stringify(numClicks));
     makeChart();
+
   }
   showRandomImages(3);
 }
@@ -137,16 +132,6 @@ function getRandomUniqueImage() {
   return found; // something from that array
 }
 
-function addUpData() {
-  var sum = 0;
-  for(var i = 0; i < allImages.length; i++){
-    sum += allImages[i].updateClicks();
-  }
-  return sum;
-}
-dataAddedUp.push(addUpData);
-
-
 
 
 loadCatalogEntrys();
@@ -180,6 +165,18 @@ function makeChart() {
 
   return new Chart(ctx, chart);
 }
+
+function loadData(){
+  var dataClicked = JSON.parse(localStorage.getItem('data'));
+
+  if(dataClicked){
+    for (var i = 0; i < dataClicked.length; i++){
+      allImages[i].numClicks = dataClicked;
+    }
+  }
+}
+
+loadData();
 
 setupImageContainers(3);
 setupListener();
